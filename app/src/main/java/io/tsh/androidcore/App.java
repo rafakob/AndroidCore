@@ -6,6 +6,7 @@ import android.content.Context;
 import com.facebook.stetho.Stetho;
 import com.orhanobut.hawk.Hawk;
 import com.orhanobut.hawk.HawkBuilder;
+import com.raizlabs.android.dbflow.config.FlowManager;
 
 import timber.log.Timber;
 
@@ -25,9 +26,10 @@ public class App extends Application {
     }
 
     private void initUtilities() {
-        if (BuildConfig.DEBUG)
-            Timber.plant(new Timber.DebugTree());
+//        if (BuildConfig.DEBUG)
+        Timber.plant(new Timber.DebugTree());
 
+        FlowManager.init(this);
         Stetho.initializeWithDefaults(this);
 
         // Encrypted shared prefs wrapper - not perfect but better than plain text...

@@ -2,6 +2,10 @@ package io.tsh.androidcore;
 
 import android.app.Application;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
@@ -49,6 +53,15 @@ public class NetworkModule {
 
     @Provides
     @PerApp
+    Gson providesGson() {
+        return new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .create();
+    }
+
+
+    @Provides
+    @PerApp
     OkHttpClient providesOkHttpClient(CookieManager cookieManager, HttpLoggingInterceptor httpLoggingInterceptor, Interceptor jsonStubInterceptor) {
         return new OkHttpClient.Builder()
                 .cookieJar(new JavaNetCookieJar(cookieManager))
@@ -59,10 +72,10 @@ public class NetworkModule {
 
     @Provides
     @PerApp
-    Retrofit providesRetrofit(String baseUrl, OkHttpClient okHttpClient) {
+    Retrofit providesRetrofit(String baseUrl, Gson gson, OkHttpClient okHttpClient) {
         return new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .client(okHttpClient)
                 .build();

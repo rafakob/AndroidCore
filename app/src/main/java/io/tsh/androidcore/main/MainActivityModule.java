@@ -2,6 +2,7 @@ package io.tsh.androidcore.main;
 
 import dagger.Module;
 import dagger.Provides;
+import io.realm.Realm;
 import io.tsh.androidcore.Prefs;
 import io.tsh.androidcore.api.ApiService;
 import io.tsh.androidcore.core.scopes.PerActivity;
@@ -23,7 +24,7 @@ public class MainActivityModule {
 
     @Provides
     @PerActivity
-    MainActivityPresenter providesMainActivityPresenter(MainActivityView mainActivityView, ApiService apiService, Prefs prefs) {
-        return new MainActivityPresenter(mainActivityView, apiService, prefs);
+    MainActivityPresenter providesMainActivityPresenter(MainActivityView mainActivityView, ApiService apiService, Prefs prefs, Realm realm) {
+        return new MainActivityPresenter(mainActivityView, apiService, prefs, realm);
     }
 }
