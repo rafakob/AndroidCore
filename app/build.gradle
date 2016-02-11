@@ -12,15 +12,24 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        setProperty("archivesBaseName", "AndroidCore-$versionName")
     }
+
+    signingConfigs {
+        releaseConfig {
+            keyAlias 'TshRafal'
+            storeFile file('./../keystore/tshrafal.jks')
+            keyPassword '0QWHKplBtX^N'
+            storePassword '0QWHKplBtX^N'
+        }
+    }
+
     buildTypes {
         release {
+            debuggable true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.releaseConfig
-            applicationVariants.all { variant ->
-                appendVersionName(variant, defaultConfig)
-            }
+            signingConfig signingConfigs.releaseConfig
         }
     }
 
@@ -88,19 +97,4 @@ dependencies {
 // Tests
 dependencies {
     testCompile 'junit:junit:4.12'
-}
-
-
-def appendVersionName(variant, defaultConfig) {
-    variant.outputs.each { output ->
-        if (output.zipAlign) {
-            def file = output.outputFile
-            def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk").replace("app", "AndroidCore")
-            output.outputFile = new File(file.parent, fileName)
-        }
-
-        def file = output.packageApplication.outputFile
-        def fileName = file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk").replace("app", "AndroidCore")
-        output.packageApplication.outputFile = new File(file.parent, fileName)
-    }
 }

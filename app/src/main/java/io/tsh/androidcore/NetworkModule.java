@@ -13,6 +13,7 @@ import io.tsh.androidcore.core.scopes.PerApp;
 import okhttp3.Interceptor;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
@@ -32,11 +33,18 @@ public class NetworkModule {
     @Provides
     @PerApp
     Interceptor providesJsonStubInterceptor() {
-        return chain -> chain.proceed(chain.request())
-                .newBuilder()
-                .addHeader("JsonStub-User-Key", "1bc4ae51-ff97-49e0-b0aa-8c1548773ca4")
-                .addHeader("JsonStub-Project-Key", "a2e42ceb-5a4b-43b2-8e39-ba1bcc013d1d")
-                .build();
+        return chain -> {
+            Request request = chain.request();
+            Request.Builder requestBuilder = request.newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .addHeader("JsonStub-User-Key", "1bc4ae51-ff97-49e0-b0aa-8c1548773ca4")
+                    .addHeader("JsonStub-Project-Key", "a2e42ceb-5a4b-43b2-8e39-ba1bcc013d1d")
+                    .method(request.method(), request.body());
+
+            request = requestBuilder.build();
+
+            return chain.proceed(request);
+        };
     }
 
     @Provides

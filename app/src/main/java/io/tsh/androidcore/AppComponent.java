@@ -1,6 +1,9 @@
 package io.tsh.androidcore;
+
 import dagger.Component;
 import io.tsh.androidcore.core.scopes.PerApp;
+import io.tsh.androidcore.main.MainActivityComponent;
+import io.tsh.androidcore.main.MainActivityModule;
 
 @PerApp
 @Component(
@@ -10,4 +13,5 @@ import io.tsh.androidcore.core.scopes.PerApp;
         }
 )
 public interface AppComponent {
+    MainActivityComponent plus(MainActivityModule mainActivityModule);
 }
